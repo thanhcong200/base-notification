@@ -1,0 +1,25 @@
+{
+    "translation": {
+        "auth": {
+            "login": {
+                "400": {
+                    "501": "Sorry, there's a login error. Please try again or contact administrator to get support.",
+                    "101": "Your phone doesn't exist",
+                    "103": "Your account has been blocked, please contact administrator!",
+                    "102": "Your account must be verified first!",
+                    "113": "Your username or password is incorrect. Please try again."
+                }
+            }
+        },
+        "common": {
+            "validate_fail": "Data is not correct",
+            "not_found": "No resource found!",
+            "forbidden": "Forbidden",
+            "unauthorized": "Your session has expired, please login again"
+        },
+        "test": {
+            "success": "Success en",
+            "fail": "Fail en"
+        }
+    }
+}

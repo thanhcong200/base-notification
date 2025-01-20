@@ -1,0 +1,25 @@
+{
+    "translation": {
+        "auth": {
+            "login": {
+                "400": {
+                    "501": "Rất tiếc, có lỗi xảy ra trong quá trình đăng nhập. Vui lòng thực hiện lại hoặc liên hệ admin để được hỗ trợ.",
+                    "101": "số điện thoại không tồn tại.",
+                    "103": "Tài khoản hiện tại đang bị tạm khóa. Vui long liên hệ admin để được hỗ trợ!",
+                    "102": "Tài khoản của bạn đang chờ phê duyệt!",
+                    "113": "Tên đăng nhập hoặc mật khẩu của bạn chưa đúng, vui lòng thử lại."
+                }
+            }
+        },
+        "common": {
+            "validate_fail": "Dữ liệu không chính xác",
+            "not_found": "Không tìm thấy tài nguyên!",
+            "forbidden": "Truy cập bị từ chối",
+            "unauthorized": "Phiên đăng nhập của bạn đã hết hạn, hãy thử login lại"
+        },
+        "test": {
+            "success": "Success vn",
+            "fail": "Fail vn"
+        }
+    }
+}
