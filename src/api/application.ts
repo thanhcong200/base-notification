@@ -6,6 +6,7 @@ import logger from '@common/logger';
 import { NotificationEvent } from '@common/notification/notification.event';
 import { KafkaAdapter } from '@common/infrastructure/kafka.adapter';
 import { ConsumerServer } from '@consumer/server';
+import { SocketService } from '@common/socket/socket.service';
 /**
  * Wrapper around the Node process, ExpressServer abstraction and complex dependencies such as services that ExpressServer needs.
  * When not using Dependency Injection, can be used as place for wiring together services which are dependencies of ExpressServer.
@@ -20,6 +21,7 @@ export class Application {
         await KafkaAdapter.getConsumer();
 
         await ConsumerServer.setup();
+        await SocketService.getSocketInstance();
         const expressServer = new ExpressServer();
         await expressServer.setup(PORT);
 

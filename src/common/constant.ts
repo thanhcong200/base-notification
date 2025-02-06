@@ -250,3 +250,24 @@ export enum Language {
     TH = 'th',
     EN = 'en',
 }
+
+
+export enum UserType {
+    USER = 'user',
+    ADMIN = 'admin'
+}
+
+export interface IAuthUser {
+    id: number;
+    type: UserType;
+    name?: string;
+    device_id?: string;
+    ex_id?: string;
+    ex_name?: string;
+    country?: Country;
+    lang?: Language;
+    multi_device?: boolean;
+
+    // only for current room
+    platform?: string;
+}

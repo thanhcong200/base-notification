@@ -1,0 +1,1 @@
+export const HELLO_USER = 'hello_user'
