@@ -1,42 +1,33 @@
 import express, { Express } from 'express';
-import { Server } from 'http';
+import { createServer, Server } from 'http'; // Use createServer
 import helmet from 'helmet';
 import routes from '@api/router';
 import logger from '@common/logger';
 import { NODE_ENV } from '@config/environment';
 import { ResponseMiddleware } from '@api/response.middleware';
-import i18nMiddleware from 'i18next-http-middleware';
-
-// eslint-disable-next-line @typescript-eslint/ban-types
 express.response.sendJson = function (data: object) {
     return this.json({ error_code: 0, message: 'OK', ...data });
 };
-
-/**
- * Abstraction around the raw Express.js server and Nodes' HTTP server.
- * Defines HTTP request mappings, basic as well as request-mapping-specific
- * middleware chains for application logic, config and everything else.
- */
 export class ExpressServer {
-    private server?: Express;
-    private httpServer?: Server;
+    private server: Express;
+    private httpServer: Server;
 
-    public async setup(port: number): Promise<Express> {
-        const server = express();
-        await this.i18next(server);
-        this.setupStandardMiddlewares(server);
-        this.setupSecurityMiddlewares(server);
-        this.configureRoutes(server);
-        this.setupErrorHandlers(server);
-
-        this.httpServer = this.listen(server, port);
-        this.server = server;
-        return this.server;
+    constructor() {
+        this.server = express();
+        this.httpServer = createServer(this.server); // Create HTTP server
     }
 
-    public listen(server: Express, port: number): Server {
-        logger.info(`Starting server on port ${port} (${NODE_ENV})`);
-        return server.listen(port);
+    public async setup(port: number): Promise<Server> {
+        this.setupStandardMiddlewares();
+        this.setupSecurityMiddlewares();
+        this.configureRoutes();
+        this.setupErrorHandlers();
+
+        this.httpServer.listen(port, () => {
+            logger.info(`Express server started on port ${port} (${NODE_ENV})`);
+        });
+
+        return this.httpServer; // Return the HTTP server instance
     }
 
     public async kill(): Promise<void> {
@@ -55,40 +46,22 @@ export class ExpressServer {
         });
     }
 
-    private async i18next(server: Express) {
+    private setupSecurityMiddlewares() {
+        this.server.use(helmet());
     }
 
-    private setupSecurityMiddlewares(server: Express) {
-        server.use(helmet());
-        server.use(helmet.referrerPolicy({ policy: 'same-origin' }));
-        server.use(
-            helmet.contentSecurityPolicy({
-                directives: {
-                    defaultSrc: ["'self'"],
-                    styleSrc: ["'unsafe-inline'"],
-                    scriptSrc: ["'unsafe-inline'", "'self'"],
-                },
-            }),
-        );
+    private setupStandardMiddlewares() {
+        this.server.use(express.json());
+        this.server.use(express.urlencoded({ extended: true }));
     }
 
-    private setupStandardMiddlewares(server: Express) {
-        server.use(express.json());
-        server.use(express.urlencoded({ extended: true }));
+    private configureRoutes() {
+        this.server.use(routes);
     }
 
-    private configureRoutes(server: Express) {
-        server.use(routes);
-    }
-
-    private setupErrorHandlers(server: Express) {
-        // if error is not an instanceOf APIError, convert it.
-        server.use(ResponseMiddleware.converter);
-
-        // catch 404 and forward to error handler
-        server.use(ResponseMiddleware.notFound);
-
-        // error handler, send stacktrace only during development
-        server.use(ResponseMiddleware.handler);
+    private setupErrorHandlers() {
+        this.server.use(ResponseMiddleware.converter);
+        this.server.use(ResponseMiddleware.notFound);
+        this.server.use(ResponseMiddleware.handler);
     }
 }

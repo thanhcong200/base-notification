@@ -19,14 +19,9 @@ export class ResponseMiddleware {
     static handler(err: APIError, req: Request, res: Response, next: NextFunction): void {
         const { status = httpStatus.INTERNAL_SERVER_ERROR, errorCode = 1 } = err;
 
-        let message = req.i18n.t(err.message);
-        if (err.messageData !== null) {
-            message = req.i18n.t(err.message, err.messageData);
-        }
-
         const response = {
             error_code: errorCode,
-            message: err.message ? message : httpStatus[status],
+            message: "error",
             stack: err.stack,
             errors: err.errors,
         };
@@ -51,7 +46,7 @@ export class ResponseMiddleware {
         let convertedError: APIError;
         if (err instanceof ValidationError) {
             convertedError = new APIError({
-                message: req.i18n.t(ResponseMiddleware.getMessageOfValidationError(err)),
+                message: 'bad request',
                 status: httpStatus.BAD_REQUEST,
                 errors: err.details,
                 stack: err.error,
@@ -104,7 +99,7 @@ export class ResponseMiddleware {
      */
     static notFound(req: Request, res: Response, next: NextFunction): void {
         const err = new APIError({
-            message: req.i18n.t('common.not_found'),
+            message: "not found",
             status: httpStatus.NOT_FOUND,
             stack: '',
             errorCode: ErrorCode.REQUEST_NOT_FOUND,

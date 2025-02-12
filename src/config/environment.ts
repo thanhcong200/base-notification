@@ -18,9 +18,7 @@ export const MONGODB_URI: string = process.env.MONGODB_URI;
 export const REDIS_URI: string = process.env.REDIS_URI;
 
 export const USER_SERVICE_URL: string = process.env.USER_SERVICE_URL;
-export const USER_SERVICE_API_KEY: string = process.env.USER_SERVICE_API_KEY;
 
-export const SERVICE_API_KEYS: string[] = process.env.SERVICE_API_KEYS.split(',').filter((key) => key.trim() !== '');
 
 export const KAFKA_BROKERS: string[] = process.env.KAFKA_BROKERS.split(',').filter((key) => key.trim() !== '');
 

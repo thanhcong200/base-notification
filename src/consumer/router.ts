@@ -19,12 +19,11 @@ export class Router {
         });
 
         const consumer = await KafkaAdapter.getConsumer();
-        await consumer.subscribe({ topic: "USER" });
-        // await Promise.all(
-        //     Array.from(topics.keys()).map(async (topic) => {
-        //         await consumer.subscribe({ topic });
-        //     }),
-        // );
+        await Promise.all(
+            Array.from(topics.keys()).map(async (topic) => {
+                await consumer.subscribe({ topic });
+            }),
+        );
     }
 
     static async onMessage(): Promise<void> {

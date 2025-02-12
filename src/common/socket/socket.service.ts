@@ -16,6 +16,14 @@ export class SocketService {
     private static _httpServerInstance: HttpServer;
     private static _emitter: Emitter;
 
+    static setup(httpServer: HttpServer): HttpServer {
+        if (!SocketService._httpServerInstance) {
+            SocketService._httpServerInstance = httpServer;
+        }
+
+        return SocketService._httpServerInstance;
+    }
+
     static async getEmitter(): Promise<Emitter> {
         if (!this._emitter) {
             SocketService._emitter = new Emitter(await RedisAdapter.connect(false), { key: PREFIX });
@@ -59,15 +67,13 @@ export class SocketService {
         const emitter = await SocketService.getEmitter();
         logger.debug(`Calling user ${user.id} for room`);
         const helloUserEventData = {
-            name: "congvu",
-            message: "hello"
+            name: 'congvu',
+            message: 'hello',
         };
         emitter.to(SocketService.getRoomName(UserType.USER, user.id)).emit(HELLO_USER, helloUserEventData);
     }
 
-
     static async register(socket: Socket, user: IAuthUser): Promise<void> {
         return socket.join(SocketService.getRoomName(user.type, user.id));
     }
-
 }
